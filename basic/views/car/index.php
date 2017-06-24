@@ -17,17 +17,13 @@ $this->title = 'Cars';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php
-    $brandsList = ['Любой'];
-    foreach ($brands as $brand) {
-        $brandsList[] = $brand->brand;
-//        var_dump($brand->brand);
 
-    }
-
-    $form = ActiveForm::begin();
+    $form = ActiveForm::begin(['action' => $url]);
     echo $form->field( $model, 'brand' )->dropDownList($brandsList);
-    echo $form->field( $model, 'model' )->dropDownList([]);
-    echo "Остаток автомобилей - $quantity шт.";
+    echo $form->field( $model, 'model' )->dropDownList($modelsList);
+    echo $form->field( $model, 'power' )->dropDownList($powersList);
+    echo "Остаток автомобилей - <span id='quantity'>$quantity</span> шт.";
+    ActiveForm::end();
 
     ?>
 

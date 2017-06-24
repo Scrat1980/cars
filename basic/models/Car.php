@@ -44,13 +44,13 @@ class Car extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'brand' => 'Brand',
-            'model' => 'Model',
-            'equipment' => 'Equipment',
-            'power' => 'Power',
-            'color' => 'Color',
-            'photo' => 'Photo',
-            'price' => 'Price',
+            'brand' => 'Марка',
+            'model' => 'Модель',
+            'equipment' => 'Комплектация',
+            'power' => 'Мощность',
+            'color' => 'Цвет',
+            'photo' => 'Фото',
+            'price' => 'Цена',
         ];
     }
 }
