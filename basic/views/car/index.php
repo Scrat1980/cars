@@ -19,10 +19,17 @@ $this->title = 'Cars';
     <?php
 
     $form = ActiveForm::begin(['action' => $url]);
-    echo $form->field( $model, 'brand' )->dropDownList($brandsList);
-    echo $form->field( $model, 'model' )->dropDownList($modelsList);
-    echo $form->field( $model, 'power' )->dropDownList($powersList);
+//    echo '<pre>';
+//    print_r($paramsList);
+//    echo '</pre>';
+//    die;
+
+    foreach ( $paramsList as $option => $optionsList) {
+        echo $form->field( $model, $option )->dropDownList($paramsList[$option]);
+    }
+
     echo "Остаток автомобилей - <span id='quantity'>$quantity</span> шт.";
+
     ActiveForm::end();
 
     ?>

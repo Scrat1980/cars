@@ -13,12 +13,18 @@ App = {
 
             var brand = $( '#car-brand' ).val();
             var model = $( '#car-model' ).val();
+            var equipment = $( '#car-equipment' ).val();
             var power = $( '#car-power' ).val();
+            var color = $( '#car-color' ).val();
+            var price = $( '#car-price' ).val();
 
             var data = JSON.stringify( [{
                 "brand": brand,
                 "model": model,
-                "power": power
+                "equipment": equipment,
+                "power": power,
+                "color": color,
+                "price": price
             }] );
 
             $.ajax({

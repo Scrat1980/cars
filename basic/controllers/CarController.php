@@ -36,44 +36,25 @@ class CarController extends Controller
      */
     public function actionIndex()
     {
-        $updateUrl = Url::to(['car/update']);
-        
-        $model = new Car();
+        $carOptions = ['brand', 'model', 'equipment', 'power', 'color', 'price'];
+        $paramsList = [];
 
-        $brandsList = $this->getOptionsList( 'brand' );
-        $modelsList = $this->getOptionsList( 'model' );
-        $powersList = $this->getOptionsList( 'power' );
+        foreach ( $carOptions as $carOption) {
+            $paramsList[$carOption] = $this->getOptionsList( $carOption );
+        }
 
         $quantity = Car::find()
-//            ->distinct()
-            ->count()
-            ;
+            ->count();
+
+        $updateUrl = Url::to(['car/update']);
+        $model = new Car();
 
         return $this->render('index', [
             'url' => $updateUrl,
             'model' => $model,
-            'modelsList' => $modelsList,
-            'brandsList' => $brandsList,
-            'powersList' => $powersList,
+            'paramsList' => $paramsList,
             'quantity' => $quantity
         ]);
-    }
-
-    private function getOptionsList( $field )
-    {
-        $options = Car::find()
-            ->select( $field )
-            ->distinct()
-            ->all()
-        ;
-
-        $optionsList = ['*' => 'Все'];
-        foreach ( $options as $option ) {
-            $optionHtml = $option->{$field};
-            $optionsList[$optionHtml] = $optionHtml;
-        }
-
-        return $optionsList;
     }
 
     public function actionUpdate( $data )
@@ -100,6 +81,23 @@ class CarController extends Controller
         return json_encode([
             'quantity' => $quantity,
         ]);
+    }
+
+    private function getOptionsList( $field )
+    {
+        $options = Car::find()
+            ->select( $field )
+            ->distinct()
+            ->all()
+        ;
+
+        $optionsList = ['*' => 'Все'];
+        foreach ( $options as $option ) {
+            $optionHtml = $option->{$field};
+            $optionsList[$optionHtml] = $optionHtml;
+        }
+
+        return $optionsList;
     }
 
     private function addFilter( $field, $value, $filter )
