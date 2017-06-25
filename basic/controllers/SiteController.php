@@ -9,6 +9,9 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Car;
+use yii\helpers\Url;
+
 
 class SiteController extends Controller
 {
@@ -55,72 +58,113 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
-     * @return string
+     * Lists all Car models.
+     * @return mixed
      */
     public function actionIndex()
     {
-        return $this->render('index');
-    }
+        $carOptions = ['brand', 'model', 'equipment', 'power', 'color', 'price'];
+        $paramsList = [];
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        foreach ( $carOptions as $carOption) {
+            $paramsList[$carOption] = $this->getOptionsList( $carOption );
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-        return $this->render('login', [
+        $quantity = Car::find()
+            ->count();
+
+        $updateUrl = Url::to( ['site/update'] );
+        $getModelsUrl = Url::to( ['site/get-models'] );
+        $model = new Car();
+
+        return $this->render('index', [
+            'url' => $updateUrl,
+            'getModelsUrl' => $getModelsUrl,
             'model' => $model,
+            'paramsList' => $paramsList,
+            'quantity' => $quantity
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
+    public function actionUpdate( $data )
     {
-        Yii::$app->user->logout();
+        $filterConditions = json_decode( $data )[0];
 
-        return $this->goHome();
-    }
+        $whereFilters = ['and'];
 
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+        foreach ( $filterConditions as $key => $value) {
+            if( $value === 'Все' ) {
+                continue;
+            }
 
-            return $this->refresh();
+            $integerFields = ['power', 'price'];
+            if( in_array( $key, $integerFields ) && $value != 0 ) {
+                $value = (int) $value;
+            }
+
+            $whereFilters = $this->addFilter(
+                $key,
+                $value,
+                $whereFilters
+            );
+
         }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
+
+        $car = new Car();
+        $quantity = $car->find()
+            ->where( $whereFilters )
+            ->count()
+        ;
+
+        return $quantity;
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
+    public function actionGetModels( $brand )
     {
-        return $this->render('about');
+        $whereCondition = ( $brand === '*' )
+            ? ''
+            : ['brand' => $brand];
+
+        $models = Car::find()
+            ->select( 'model' )
+            ->where( $whereCondition )
+            ->all()
+        ;
+
+        $modelsList = ['*' => 'Все'];
+
+        foreach ($models as $model) {
+            $modelsList[] = $model->model;
+        }
+
+        return json_encode( $modelsList );
     }
+
+    private function getOptionsList( $field )
+    {
+        $options = Car::find()
+            ->select( $field )
+            ->distinct()
+            ->all()
+        ;
+
+        $optionsList = ['*' => 'Все'];
+        foreach ( $options as $option ) {
+            $optionHtml = $option->{$field};
+            $optionsList[$optionHtml] = $optionHtml;
+        }
+
+        return $optionsList;
+    }
+
+    private function addFilter( $field, $value, $filter )
+    {
+        if( $value !== '*' ) {
+            $filter[] = ['=', $field, $value];
+        }
+
+        return $filter;
+    }
+
+
 }
