@@ -76,39 +76,28 @@ class CarController extends Controller
         return $optionsList;
     }
 
-    public function actionUpdate( $brand, $model, $power )
+    public function actionUpdate( $data )
     {
-
-        $car = new Car();
+        $filterConditions = json_decode( $data )[0];
 
         $whereFilters = ['and'];
 
-        $whereFilters = $this->addFilter(
-            'brand',
-            $brand,
-            $whereFilters
-        );
+        foreach ( $filterConditions as $key => $value) {
+            $whereFilters = $this->addFilter(
+                $key,
+                $value,
+                $whereFilters
+            );
 
-        $whereFilters = $this->addFilter(
-            'model',
-            $model,
-            $whereFilters
-        );
+        }
 
-        $whereFilters = $this->addFilter(
-            'power',
-            $power,
-            $whereFilters
-        );
-
+        $car = new Car();
         $quantity = $car->find()
             ->where( $whereFilters )
-//            ->distinct()
             ->count()
         ;
 
         return json_encode([
-//            'modelsList' => $modelsList,
             'quantity' => $quantity,
         ]);
     }

@@ -15,20 +15,18 @@ App = {
             var model = $( '#car-model' ).val();
             var power = $( '#car-power' ).val();
 
+            var data = JSON.stringify( [{
+                "brand": brand,
+                "model": model,
+                "power": power
+            }] );
+
             $.ajax({
                 url: url,
-                // type: "POST",
-                // contentType: "application/json",
-                data: {
-                    brand: brand,
-                    model: model,
-                    power: power
-                }
+                data: {data: data}
             }).done( function( response ){
                 var responseParsed = JSON.parse( response );
                 var quantity = responseParsed['quantity'];
-                console.log( responseParsed );
-                console.log( quantity );
                 $( '#quantity' ).text( quantity );
             });
         } );
