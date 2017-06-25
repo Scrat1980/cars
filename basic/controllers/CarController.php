@@ -46,11 +46,13 @@ class CarController extends Controller
         $quantity = Car::find()
             ->count();
 
-        $updateUrl = Url::to(['car/update']);
+        $updateUrl = Url::to( ['car/update'] );
+        $getModelsUrl = Url::to( ['car/get-models'] );
         $model = new Car();
 
         return $this->render('index', [
             'url' => $updateUrl,
+            'getModelsUrl' => $getModelsUrl,
             'model' => $model,
             'paramsList' => $paramsList,
             'quantity' => $quantity
@@ -64,6 +66,15 @@ class CarController extends Controller
         $whereFilters = ['and'];
 
         foreach ( $filterConditions as $key => $value) {
+            if( $value === 'Все' ) {
+                continue;
+            }
+
+            $integerFields = ['power', 'price'];
+            if( in_array( $key, $integerFields ) && $value != 0 ) {
+                $value = (int) $value;
+            }
+
             $whereFilters = $this->addFilter(
                 $key,
                 $value,
@@ -78,9 +89,28 @@ class CarController extends Controller
             ->count()
         ;
 
-        return json_encode([
-            'quantity' => $quantity,
-        ]);
+        return $quantity;
+    }
+
+    public function actionGetModels( $brand )
+    {
+        $whereCondition = ( $brand === '*' )
+            ? ''
+            : ['brand' => $brand];
+
+        $models = Car::find()
+            ->select( 'model' )
+            ->where( $whereCondition )
+            ->all()
+        ;
+
+        $modelsList = ['*' => 'Все'];
+
+        foreach ($models as $model) {
+            $modelsList[] = $model->model;
+        }
+
+        return json_encode( $modelsList );
     }
 
     private function getOptionsList( $field )

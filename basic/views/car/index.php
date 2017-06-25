@@ -13,16 +13,13 @@ $this->title = 'Cars';
 ?>
 
 <div class="car-index">
+    <div style="display: none" id="get-models-url" data-url="<?=$getModelsUrl?>"></div>
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php
 
     $form = ActiveForm::begin(['action' => $url]);
-//    echo '<pre>';
-//    print_r($paramsList);
-//    echo '</pre>';
-//    die;
 
     foreach ( $paramsList as $option => $optionsList) {
         echo $form->field( $model, $option )->dropDownList($paramsList[$option]);

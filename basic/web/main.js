@@ -4,6 +4,7 @@
 
 $( document ).ready(function(){
     App.updateQuantity();
+    App.limitModels();
 });
 
 App = {
@@ -30,12 +31,36 @@ App = {
             $.ajax({
                 url: url,
                 data: {data: data}
-            }).done( function( response ){
-                var responseParsed = JSON.parse( response );
-                var quantity = responseParsed['quantity'];
+            }).done( function( quantity ){
                 $( '#quantity' ).text( quantity );
             });
         } );
 
+    },
+
+    limitModels: function() {
+        $( '#car-brand' ).on( 'change', function() {
+            var brand = $( '#car-brand' ).val();
+            var url = $( '#get-models-url' ).attr( 'data-url' );
+
+            $.ajax({
+                url: url,
+                data: {brand: brand}
+            }).done( function( response ) {
+                var models = JSON.parse( response );
+
+                $( '#car-model option' ).remove();
+                for ( var index in models ) {
+                    var selected = ( models[index] === 'Все' )
+                        ? 'selected'
+                        : '';
+
+                    $( '#car-model' ).append(
+                        '<option ' + selected + ' value="' + models[index] + '">' +
+                        models[index] + '</option>'
+                    );
+                }
+            } );
+        } );
     }
 };
