@@ -15,6 +15,7 @@ use Yii;
  * @property string $color
  * @property string $photo
  * @property integer $price
+ * @property string $status
  */
 class Car extends \yii\db\ActiveRecord
 {
@@ -33,7 +34,7 @@ class Car extends \yii\db\ActiveRecord
     {
         return [
             [['power', 'price'], 'integer'],
-            [['brand', 'model', 'equipment', 'color', 'photo'], 'string', 'max' => 255],
+            [['brand', 'model', 'equipment', 'color', 'photo', 'status'], 'string', 'max' => 255],
         ];
     }
 
@@ -51,6 +52,7 @@ class Car extends \yii\db\ActiveRecord
             'color' => 'Цвет',
             'photo' => 'Фото',
             'price' => 'Цена',
+            'status' => 'Статус'
         ];
     }
 }

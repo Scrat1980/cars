@@ -31,8 +31,9 @@ CREATE TABLE `car` (
   `color` varchar(255) DEFAULT NULL,
   `photo` varchar(255) DEFAULT NULL,
   `price` int(10) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +42,7 @@ CREATE TABLE `car` (
 
 LOCK TABLES `car` WRITE;
 /*!40000 ALTER TABLE `car` DISABLE KEYS */;
-INSERT INTO `car` VALUES (1,'Hyundai','Tucson','Кондиционер',150,'Оранжевый','/',1500000),(2,'Hyundai','Solaris','Кондиционер',180,'Белый','/',2000000),(3,'Ford','Kuga','Кондиционер',220,'Серебристый','/',2000000);
+INSERT INTO `car` VALUES (1,'Hyundai','Tucson','Кондиционер',150,'Оранжевый','/',1500000,'забронирован'),(2,'Hyundai','Solaris','Кондиционер',180,'Белый','/',2000000,'свободен'),(3,'Ford','Kuga','Кондиционер',220,'Серебристый','/',2000000,'свободен'),(7,'Ford','Explorer','Климат контроль',250,'Серый','/',3000000,'свободен');
 /*!40000 ALTER TABLE `car` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-25 19:48:25
+-- Dump completed on 2017-06-26  7:53:01
