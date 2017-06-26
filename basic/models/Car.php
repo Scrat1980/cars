@@ -32,7 +32,7 @@ class Car extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-//            [['power', 'price'], 'integer'],
+            [['power', 'price'], 'integer'],
             [['brand', 'model', 'equipment', 'color', 'photo'], 'string', 'max' => 255],
         ];
     }
